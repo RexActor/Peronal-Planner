@@ -6,6 +6,10 @@ Personal Planner created in JavaScript
 You are able to simply add/edit your daily tasks by saving them in local storage
 
 If there is already saved values in specific time block, then it updates already existing value to new
+Times are displayed in speficif colour layout:
+- past
+- present
+- future
 
 ## Installation
 
