@@ -8,12 +8,15 @@ var startingHour = 9;
 var finishHour = 17;
 
 var localStoredItems = [];
-
+var itemFound;
+getSavedEntries();
 //get today's date and display on page in specific format
 function getTodaysDate() {
-  currentDay.text(dayjs().format("dddd D [of] MMMM YYYY"));
+  return dayjs().format("dddd D [of] MMMM YYYY");
 }
-getTodaysDate();
+function updateTodaysDate() {
+  currentDay.text(getTodaysDate());
+}
 
 function generateDailyHours() {
   //checks if user used wrong values in starting hour and finish hour
@@ -26,7 +29,7 @@ function generateDailyHours() {
   }
 
   var currentTime = dayjs().format("HH");
-  console.log(currentTime);
+
   for (var i = startingHour; i <= finishHour; i++) {
     //creating main TimeBlock element
     var timeBlock = $("<div>");
@@ -40,6 +43,10 @@ function generateDailyHours() {
     var timeSpan = $("<span>");
     //creating textarea element
     var textArea = $("<textarea>");
+    //checking if already something is stored for this specific time.
+    //if something is stored, then we are displaying this stored value in textarea
+
+    textArea.text(checkForStoredItem(i));
 
     //adding classes to timeDiv
     timeDiv.addClass("col-md-1 hour");
@@ -87,8 +94,38 @@ function generateDailyHours() {
     mainBlock.append(timeBlock);
   }
 }
-
+updateTodaysDate();
 generateDailyHours();
+
+function checkStoredItems(item) {
+  itemFound = false;
+  for (var i = 0; i < localStoredItems.length; i++) {
+    if (
+      localStoredItems[i].time == item.time &&
+      localStoredItems[j].date == item.date
+    ) {
+      return true;
+    }
+  }
+}
+
+function updateExistingItem(item) {
+  for (var i = 0; i < localStoredItems.length; i++) {
+    if (localStoredItems[i].time == item.time) {
+      localStoredItems[i] = item;
+      return;
+    }
+  }
+}
+
+//function to check for values in storedItems array
+function checkForStoredItem(time) {
+  for (var j = 0; j < localStoredItems.length; j++) {
+    if (localStoredItems[j].time == time) {
+      return localStoredItems[j].description;
+    }
+  }
+}
 
 function saveEntry(e) {
   //   e.preventDefault();
@@ -97,13 +134,31 @@ function saveEntry(e) {
   var timeSave = $(target).attr("data-time");
   //traversing tree to get parent element from clicked button and accessing textarea element to get it's value
   var entryDesc = $(target.parentElement.children[1]).val();
+  var todaysDate = dayjs().format("DD/MM/YYYY");
 
   var dailyActivity = {
     time: timeSave,
     description: entryDesc,
+    date: todaysDate,
   };
-  localStoredItems.push(dailyActivity);
+
+  //check if item is already stored in storage, if it's stored
+  //then update already existing item
+  if (checkStoredItems(dailyActivity)) {
+    updateExistingItem(dailyActivity);
+  } else {
+    localStoredItems.push(dailyActivity);
+  }
+
   localStorage.setItem("dailyActivity", JSON.stringify(localStoredItems));
 }
 
-function getSavedEntries() {}
+//retrieve already saved items
+function getSavedEntries() {
+  var temp = JSON.parse(localStorage.getItem("dailyActivity"));
+  if (temp) {
+    localStoredItems = temp;
+  } else {
+    localStoredItems = [];
+  }
+}
