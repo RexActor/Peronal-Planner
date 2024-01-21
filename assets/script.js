@@ -102,7 +102,7 @@ function checkStoredItems(item) {
   for (var i = 0; i < localStoredItems.length; i++) {
     if (
       localStoredItems[i].time == item.time &&
-      localStoredItems[j].date == item.date
+      localStoredItems[i].date == item.date
     ) {
       return true;
     }
@@ -113,6 +113,7 @@ function updateExistingItem(item) {
   for (var i = 0; i < localStoredItems.length; i++) {
     if (localStoredItems[i].time == item.time) {
       localStoredItems[i] = item;
+
       return;
     }
   }
