@@ -11,6 +11,10 @@ If there is already saved values in specific time block, then it updates already
 
 N/A
 
+## Deployed Site
+
+[Deployed Site for Preview](https://rexactor.github.io/Personal-Planner/)
+
 ## Screenshots
 
 ![Main Image](/assets/images/main_page.PNG)
